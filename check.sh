@@ -14,3 +14,11 @@ for i in tarballs/*.sig ; do
     === "Checking signature $i"
     gpg --output "${i%.sig}" --decrypt "${i}"
 done
+
+pushd tarballs/
+    === "Checking availability of tarballs"
+    for i in herbstluftwm-*.tar.gz ; do
+        === "... $i"
+        diff -us <(wget -q -O - http://herbstluftwm.org/tarballs/$i) "$i"
+    done
+popd
