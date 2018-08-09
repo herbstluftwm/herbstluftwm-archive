@@ -1,0 +1,9 @@
+dist: trusty
+
+install:
+    - sudo apt-get -y -q update
+    - sudo apt-get -y -q install gnupg
+    - gpg --recv-key 1caff810
+
+script:
+    - ./check.sh
