@@ -18,7 +18,8 @@ done
 pushd tarballs/
     === "Checking availability of tarballs"
     for i in herbstluftwm-*.tar.gz ; do
-        === "... $i"
-        diff -us <(wget -q -O - http://herbstluftwm.org/tarballs/$i) "$i"
+        url=http://herbstluftwm.org/tarballs/$i
+        === "... $url"
+        diff -us <(wget -q -O - "$url") "$i"
     done
 popd
