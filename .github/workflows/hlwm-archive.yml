@@ -1,0 +1,27 @@
+name: HLWM Archive Self-Check
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+  check-tars:
+    # Name the Job
+    name: Check tar balls
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Updating GPG key
+        run: |
+          gpg --recv-key 1caff810
+
+      - name: Running ./check.sh
+        run: |
+          ./check.sh
