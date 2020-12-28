@@ -20,7 +20,8 @@ jobs:
 
       - name: Updating GPG key
         run: |
-          gpg --recv-key 1caff810
+          gpg --keyserver hkp://pgp.mit.edu:11371 \
+            --recv-key 1caff810
 
       - name: Running ./check.sh
         run: |
