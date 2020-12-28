@@ -8,9 +8,7 @@ on:
 
 jobs:
   check-tars:
-    # Name the Job
-    name: Check tar balls
-    # Set the type of machine to run on
+    name: Check tarballs
     runs-on: ubuntu-latest
 
     steps:
@@ -18,11 +16,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Updating GPG key
+      - name: Importing GPG key
         run: |
-          gpg \
-            --keyserver keyring.debian.org \
-            --recv-key 1caff810
+          gpg --import gpg-keys.asc
 
       - name: Running ./check.sh
         run: |
