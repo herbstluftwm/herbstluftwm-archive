@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
 version="$1"
 
 if [ -z "$1" ] || [ "$1" = -h ] ; then
@@ -22,7 +23,7 @@ EOF
 fi
 
 if git status --porcelain | grep '^ M' ; then
-    echo "You have unstaged changes. Fix them or use git stash" >&2
+    echo "WARNING: You have unstaged changes. Fix them, or add them (for inclusion in the release commit)" >&2
     exit 1
 fi
 
@@ -41,14 +42,22 @@ sed -i -e "/$headerexp/,+1s/^[-]*$/$newunderline/" \
 
 echo ":: Committing changes"
 git add NEWS VERSION
-git commit -m "Release $version"
+git commit -a -m "Release $version"
 echo ":: Tagging commit"
 git tag -s "v$version" -m "Release $version"
 
 echo "==> Tarball"
 echo ":: Tarball creation"
-make BUILDDIR=.build-doc-"$version" tar
-tarball="herbstluftwm-$version.tar.gz"
+builddir=.build-doc-"$version"
+mkdir -p "$builddir"
+pushd "$builddir"
+cmake -DCOPY_DOCUMENTATION=NO ..
+popd
+make -C "$builddir" all_doc
+builddir="$builddir" ci/mktar.sh
+tarball="herbstluftwm-${version}.tar.gz"
+gpg --detach-sign "${tarball}"
+
 md5sum=$(md5sum "$tarball" | head -c 13 )
 echo ":: Patching www/download.txt"
 line=$(printf "| %-7s | $date | $md5sum...%15s| link:tarballs/%s[tar.gz] |link:tarballs/%s.sig[sig]" \
