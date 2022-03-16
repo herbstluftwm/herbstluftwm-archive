@@ -15,7 +15,7 @@ Error: This script must be run from the main herbstluftwm repository!
 
 For example, invoke:
 
-    ../herbstluftwm-archive/release.sh v0.9.9
+    ../herbstluftwm-archive/release.sh 0.9.9
 
 from the herbstluftwm/ git directory.
 EOF
