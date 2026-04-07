@@ -3,6 +3,18 @@
 set -e
 version="$1"
 
+ask() {
+    echo -n "==> $1 [y/n] "
+    read -n 1 reply
+    echo
+    if [[ "${reply^^}" == 'Y' ]] ; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+
 if [ -z "$1" ] || [ "$1" = -h ] ; then
     echo "$0 VERSIONMAJOR.VERSIONMINOR.VERSIONPATCH"
     echo "  Releases the specified version (tagging and tarball creation)"
@@ -24,6 +36,15 @@ fi
 
 if git status --porcelain | grep '^ M' ; then
     echo "WARNING: You have unstaged changes. Fix them, or add them (for inclusion in the release commit)" >&2
+    exit 1
+fi
+
+cat <<EOF
+Warning: Before continuing:
+1. update the AUTHORS file!
+2. Update 'current git verison' in MIGRATION! $(grep 'current git' MIGRATION)
+EOF
+if ! ask "Continue?" ; then
     exit 1
 fi
 
